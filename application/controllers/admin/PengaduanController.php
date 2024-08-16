@@ -33,7 +33,7 @@ class PengaduanController extends CI_Controller
         $data['pengaduan'] = $this->PengaduanModel->get_filtered($selected_wisata, $selected_bulan, $selected_tahun);
 
         // Tambahkan logika untuk memeriksa apakah 'created_at' dalam 10 jam terakhir
-        $current_time = new DateTime(null, new DateTimeZone('Asia/Makassar'));
+        $current_time = new DateTime("", new DateTimeZone('Asia/Makassar'));
 
         foreach ($data['pengaduan'] as &$pengaduan) {
             $created_at = new DateTime($pengaduan['created_at'], new DateTimeZone('Asia/Makassar'));
