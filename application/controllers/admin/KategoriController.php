@@ -10,6 +10,10 @@ class KategoriController extends CI_Controller
     {
         parent::__construct();
         $this->load->model('KategoriModel');
+        if (!$this->session->userdata('user_id')) {
+            // Jika tidak login, redirect ke halaman login
+            redirect(base_url('login')); // Ganti dengan rute login Anda
+        }
     }
 
 
@@ -36,6 +40,8 @@ class KategoriController extends CI_Controller
         $this->load->view('admin/create_kategori', $data);
         $this->load->view('layouts/footer', $data);
     }
+
+
 
     public function store()
     {
@@ -88,6 +94,80 @@ class KategoriController extends CI_Controller
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($response));
+    }
+
+
+    public function edit($hash)
+    {
+        $id = $this->KategoriModel->decryptId($hash);
+        if ($id === null) {
+            show_404();
+        }
+
+        $data['kategori'] = $this->KategoriModel->get_item_by_id($id);
+        if ($data['kategori'] === null) {
+            show_404();
+        }
+
+        $data['title'] = 'Edit Kategori : Apps Pariwisata Kab. Pangkep';
+        $this->load->view('layouts/head', $data);
+        $this->load->view('layouts/header', $data);
+        $this->load->view('layouts/sidebar', $data);
+        $this->load->view('admin/edit_kategori', $data);
+        $this->load->view('layouts/footer', $data);
+    }
+
+    public function update()
+    {
+        $id = $this->input->post('id');
+        $nama_kategori = $this->input->post('nama_kategori');
+        $default_image = $this->input->post('existing_image'); // Ambil nama gambar lama yang terenkripsi dari input tersembunyi
+
+        // Path gambar default jika tidak ada gambar baru
+        $config['upload_path'] = './public/uploads/kategori/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['encrypt_name'] = TRUE; // Menggunakan nama file terenkripsi
+        $this->load->library('upload', $config);
+
+        if (!empty($_FILES['gambar_kategori']['name'])) {
+            // Jika ada gambar baru diupload
+            if ($this->upload->do_upload('gambar_kategori')) {
+                $upload_data = $this->upload->data();
+                $gambar_kategori = $upload_data['file_name']; // Nama file terenkripsi
+            } else {
+                $response = array(
+                    'status' => 'error',
+                    'message' => $this->upload->display_errors()
+                );
+                echo json_encode($response);
+                return;
+            }
+        } else {
+            // Gunakan gambar lama jika tidak ada gambar baru
+            $gambar_kategori = $default_image;
+        }
+
+        $data = array(
+            'nama_kategori' => $nama_kategori,
+            'gambar_kategori' => $gambar_kategori
+        );
+
+        $updated = $this->KategoriModel->update_item($id, $data);
+
+        if ($updated) {
+            $response = array(
+                'status' => 'success',
+                'message' => 'Niceee!<br>Data updated successfully',
+                'redirect' => base_url('kategori')
+            );
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Oppss!<br>Failed to update data'
+            );
+        }
+
+        echo json_encode($response);
     }
 }
 

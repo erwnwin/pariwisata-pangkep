@@ -55,18 +55,51 @@ $route['translate_uri_dashes'] = FALSE;
 
 
 // login
+$route['auth/login'] = 'LoginController/login';
 $route['login'] = 'LoginController';
 $route['logout'] = 'LoginController/logout';
 
 // routes admin
 $route['dashboard'] = 'admin/DashboardController';
+$route['dashboard/real-time'] = 'admin/DashboardController/get_visitor_stats';
 
 // routes kategori
 $route['kategori'] = 'admin/KategoriController';
 $route['kategori/create'] = 'admin/KategoriController/create';
 $route['kategori/store'] = 'admin/KategoriController/store';
-// =============================
+$route['kategori/update'] = 'admin/KategoriController/update';
+$route['kategori/(:any)/edit'] = 'admin/KategoriController/edit/$1';
 
-$route['wisata'] = 'admin/WisataController';
+// =============================
+// API Kategori
+$route['api/kategori'] = 'api/ApiKategoriController/index';
+
+// routes pengumuman
 $route['pengumuman'] = 'admin/PengumumanController';
+$route['pengumuman/create'] = 'admin/PengumumanController/create';
+$route['pengumuman/store'] = 'admin/PengumumanController/store';
+// =============================
+// API Pengumuman
+$route['api/pengumuman'] = 'api/ApiPengumumanController/index';
+
+// routes wisata
+$route['wisata'] = 'admin/WisataController';
+$route['wisata/create'] = 'admin/WisataController/create';
+$route['wisata/store'] = 'admin/WisataController/store';
+$route['wisata/update'] = 'admin/WisataController/update';
+$route['wisata/(:any)/edit'] = 'admin/WisataController/edit/$1';
+
+// =============================
+// API wisata
+$route['api/wisata'] = 'api/ApiWisataController/index';
+$route['api/wisata/kategori/(:num)'] = 'api/ApiWisataController/wisata_by_kategori/$1';
+
+$route['api/visitor/record'] = 'api/ApiVisitorController/record';
+
+
 $route['pengaduan'] = 'admin/PengaduanController';
+$route['api/pengaduan/kirim'] = 'api/ApiPengaduanController/submit_complaint';
+
+
+// INFO APPS
+$route['info-apps'] = 'admin/InfoAppController';

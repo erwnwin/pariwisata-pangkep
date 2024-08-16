@@ -5,9 +5,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class PengumumanController extends CI_Controller
 {
 
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('PengumumanModel');
+        if (!$this->session->userdata('user_id')) {
+            // Jika tidak login, redirect ke halaman login
+            redirect(base_url('login')); // Ganti dengan rute login Anda
+        }
+    }
+
+
     public function index()
     {
         $data['title'] = 'Pengumuman : Apps Pariwisata Kab. Pangkep';
+        $data['pengumuman'] = json_decode(json_encode($this->PengumumanModel->get_items()), true);
 
         // Load view dan kirim data ke view
         $this->load->view('layouts/head', $data);
@@ -15,6 +28,74 @@ class PengumumanController extends CI_Controller
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/pengumuman', $data);
         $this->load->view('layouts/footer', $data);
+    }
+
+
+    public function create()
+    {
+        $data['title'] = 'Create Pengumuman : Apps Pariwisata Kab. Pangkep';
+
+        // Load view dan kirim data ke view
+        $this->load->view('layouts/head', $data);
+        $this->load->view('layouts/header', $data);
+        $this->load->view('layouts/sidebar', $data);
+        $this->load->view('admin/create_pengumuman', $data);
+        $this->load->view('layouts/footer', $data);
+    }
+
+    public function store()
+    {
+        $judul_pengumuman =  $this->input->post('judul_pengumuman');
+        $deskripsi = $this->input->post('deskripsi');
+        $gambar = $this->input->post('gambar');
+
+        // Konfigurasi upload gambar
+        $config['upload_path'] = './public/uploads/pengumuman/'; // Folder tempat menyimpan gambar
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size'] = 4048; // 2MB maksimal ukuran gambar
+        $config['encrypt_name'] = TRUE; // Enkripsi nama file
+
+        // Data yang akan dikirim ke REST API
+        $this->load->library('upload', $config);
+
+        // Upload gambar
+        if ($this->upload->do_upload('gambar')) {
+            $upload_data = $this->upload->data();
+            $gambar = $upload_data['file_name'];
+            $data = array(
+                'judul_pengumuman' => $judul_pengumuman,
+                'deskripsi' => $deskripsi,
+                'gambar' => $gambar
+            );
+
+            $simpan = $this->PengumumanModel->insert_item($data);
+
+            if ($simpan) {
+                // Data berhasil disimpan
+                $response = array(
+                    'success' => true,
+                    'message' => 'Sukses!<br>Data Berhasil Disimpan!',
+                    'redirect' => base_url('pengumuman')
+                );
+            } else {
+                // Gagal menyimpan data
+                $response = array(
+                    'success' => false,
+                    'message' => 'Gagal!<br>Data Gagal Disimpan!'
+                );
+            }
+        } else {
+            // Gagal upload gambar
+            $response = array(
+                'success' => false,
+                'message' => 'Gagal!<br> Upload Gambar Gagal: ' . $this->upload->display_errors()
+            );
+        }
+
+        // Set header dan kirim response dalam format JSON
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response));
     }
 }
 

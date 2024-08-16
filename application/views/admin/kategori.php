@@ -46,7 +46,7 @@
                                                          <img src="<?php echo base_url('public/uploads/kategori/' . $r['gambar_kategori']) ?>" alt="" width="50px" height="50px">
                                                      </td>
                                                      <td>
-                                                         <a href="<?= base_url('jasa-titip/' . $r['id'] . '/edit') ?>" class="btn btn-sm btn-outline-warning"> Edit </a>
+                                                         <a href="<?= base_url('kategori/' . $r['encrypted_id'] . '/edit') ?>" class="btn btn-sm btn-outline-warning"> Edit </a>
                                                          <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-id="<?php echo $r['id']; ?>" data-toggle="modal" data-target="#modalDelete"> Delete</button>
                                                      </td>
                                                  </tr>

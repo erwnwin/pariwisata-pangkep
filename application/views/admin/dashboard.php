@@ -22,6 +22,20 @@
                          </p>
                      </div>
 
+                     <div class="row">
+                         <div class="col-12">
+                             <div class="card card-default">
+                                 <div class="card-header">
+                                     <h3 class="card-title">Statistik Pengunjung Penggunaan Aplikasi Wisata</h3>
+                                 </div>
+                                 <div class="card-body">
+                                     <canvas id="visitorChart" class="blink" width="400" height="200"></canvas>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+
+
                  </div>
              </section>
              <div>

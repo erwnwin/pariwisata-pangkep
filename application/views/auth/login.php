@@ -66,7 +66,7 @@
                                     </svg>
                                 </span>
                             </div>
-                            <input type="text" id="identifier" name="identifier" class="form-control" placeholder="Email / username" required>
+                            <input type="text" id="username" name="username" class="form-control" placeholder="Username" autocomplete="off" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -82,7 +82,13 @@
                         </div>
                     </div>
                     <div class="form-group remember-me-container">
-                        <button type="submit" class="btn btn-default" id="btnLogin">Login</button>
+
+                        <button type="submit" class="btn btn-default">
+                            <span id="btnLoader" style="display: none;">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                            Login
+                        </button>
                     </div>
                 </form>
                 <!-- <a href="https://wa.link/62fh0h" class="lupa-password">Lupa password? Hubungi ADMIN</a> -->
@@ -99,5 +105,7 @@
 <script src="<?= base_url() ?>public/assets/plugins/toastr/toastr.min.js"></script>
 
 <script src="<?= base_url() ?>public/css/login.js"></script>
+<script src="<?= base_url() ?>public/assets/js/login.js"></script>
+
 
 </html>
