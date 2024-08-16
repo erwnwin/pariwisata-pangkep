@@ -50,7 +50,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['default_controller'] = 'LoginController';
-$route['404_override'] = '';
+$route['404_override'] = 'Error_page';
 $route['translate_uri_dashes'] = FALSE;
 
 
@@ -78,6 +78,8 @@ $route['api/kategori'] = 'api/ApiKategoriController/index';
 $route['pengumuman'] = 'admin/PengumumanController';
 $route['pengumuman/create'] = 'admin/PengumumanController/create';
 $route['pengumuman/store'] = 'admin/PengumumanController/store';
+$route['pengumuman/update'] = 'admin/PengumumanController/update';
+$route['pengumuman/(:any)/edit'] = 'admin/PengumumanController/edit/$1';
 // =============================
 // API Pengumuman
 $route['api/pengumuman'] = 'api/ApiPengumumanController/index';
@@ -103,3 +105,7 @@ $route['api/pengaduan/kirim'] = 'api/ApiPengaduanController/submit_complaint';
 
 // INFO APPS
 $route['info-apps'] = 'admin/InfoAppController';
+$route['info-apps/edit'] = 'admin/InfoAppController/edit';
+$route['info-apps/update'] = 'admin/InfoAppController/update';
+
+$route['api/info'] = 'api/ApiInfoController/info';

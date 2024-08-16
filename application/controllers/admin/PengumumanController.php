@@ -97,6 +97,82 @@ class PengumumanController extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($response));
     }
+
+
+    public function edit($hash)
+    {
+        $id = $this->PengumumanModel->decryptId($hash);
+        if ($id === null) {
+            show_404();
+        }
+
+        $data['pengumuman'] = $this->PengumumanModel->get_item_by_id($id);
+        if ($data['pengumuman'] === null) {
+            show_404();
+        }
+
+        $data['title'] = 'Edit Pengumuman : Apps Pariwisata Kab. Pangkep';
+        $this->load->view('layouts/head', $data);
+        $this->load->view('layouts/header', $data);
+        $this->load->view('layouts/sidebar', $data);
+        $this->load->view('admin/edit_pengumuman', $data);
+        $this->load->view('layouts/footer', $data);
+    }
+
+    public function update()
+    {
+        $id = $this->input->post('id');
+        $judul_pengumuman = $this->input->post('judul_pengumuman');
+        $deskripsi = $this->input->post('deskripsi');
+        $default_image = $this->input->post('existing_image'); // Ambil nama gambar lama yang terenkripsi dari input tersembunyi
+
+        // Path gambar default jika tidak ada gambar baru
+        $config['upload_path'] = './public/uploads/pengumuman/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['encrypt_name'] = TRUE; // Menggunakan nama file terenkripsi
+        $this->load->library('upload', $config);
+
+        if (!empty($_FILES['gambar']['name'])) {
+            // Jika ada gambar baru diupload
+            if ($this->upload->do_upload('gambar')) {
+                $upload_data = $this->upload->data();
+                $gambar = $upload_data['file_name']; // Nama file terenkripsi
+            } else {
+                $response = array(
+                    'status' => 'error',
+                    'message' => $this->upload->display_errors()
+                );
+                echo json_encode($response);
+                return;
+            }
+        } else {
+            // Gunakan gambar lama jika tidak ada gambar baru
+            $gambar = $default_image;
+        }
+
+        $data = array(
+            'judul_pengumuman' => $judul_pengumuman,
+            'deskripsi' => $deskripsi,
+            'gambar' => $gambar
+        );
+
+        $updated = $this->PengumumanModel->update_item($id, $data);
+
+        if ($updated) {
+            $response = array(
+                'status' => 'success',
+                'message' => 'Niceee!<br>Data updated successfully',
+                'redirect' => base_url('pengumuman')
+            );
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Oppss!<br>Failed to update data'
+            );
+        }
+
+        echo json_encode($response);
+    }
 }
 
 /* End of file PengumumanController.php */
