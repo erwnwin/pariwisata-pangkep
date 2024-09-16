@@ -43,6 +43,91 @@ class WisataController extends CI_Controller
         $this->load->view('layouts/footer', $data);
     }
 
+    // public function store()
+    // {
+    //     // Ambil data dari form
+    //     $nama_wisata = $this->input->post('nama_wisata');
+    //     $alamat_lengkap = $this->input->post('alamat_lengkap');
+    //     $latitude = $this->input->post('latitude');
+    //     $longitude = $this->input->post('longitude');
+    //     $kategori_id = $this->input->post('kategori_id');
+    //     $deskripsi = $this->input->post('deskripsi');
+
+    //     // Konfigurasi upload gambar
+    //     $config['upload_path'] = './public/uploads/wisata/'; // Folder tempat menyimpan gambar
+    //     $config['allowed_types'] = 'gif|jpg|png|jpeg';
+    //     $config['max_size'] = 5048; // 5MB maksimal ukuran gambar
+    //     $config['encrypt_name'] = TRUE; // Enkripsi nama file
+
+    //     // Load library upload
+    //     $this->load->library('upload', $config);
+
+    //     // Menyimpan data wisata
+    //     $data_wisata = array(
+    //         'nama_wisata' => $nama_wisata,
+    //         'alamat_lengkap' => $alamat_lengkap,
+    //         'latitude' => $latitude,
+    //         'longitude' => $longitude,
+    //         'kategori_id' => $kategori_id,
+    //         'deskripsi' => $deskripsi
+    //     );
+
+    //     // Simpan data wisata dan ambil ID
+    //     $wisata_id = $this->WisataModel->insert_wisata($data_wisata);
+
+    //     if ($wisata_id) {
+    //         // Upload gambar
+    //         $files = $_FILES['gambar_detail'];
+    //         $file_count = count($files['name']);
+    //         $upload_errors = [];
+
+    //         for ($i = 0; $i < $file_count; $i++) {
+    //             $_FILES['file']['name'] = $files['name'][$i];
+    //             $_FILES['file']['type'] = $files['type'][$i];
+    //             $_FILES['file']['tmp_name'] = $files['tmp_name'][$i];
+    //             $_FILES['file']['error'] = $files['error'][$i];
+    //             $_FILES['file']['size'] = $files['size'][$i];
+
+    //             if ($this->upload->do_upload('file')) {
+    //                 $upload_data = $this->upload->data();
+    //                 $image_data = array(
+    //                     'wisata_id' => $wisata_id,
+    //                     'gambar_detail' => $upload_data['file_name']
+    //                 );
+    //                 $this->WisataModel->insert_gambar($image_data);
+    //             } else {
+    //                 $upload_errors[] = $this->upload->display_errors();
+    //             }
+    //         }
+
+    //         if (!empty($upload_errors)) {
+    //             // Gagal upload gambar
+    //             $response = array(
+    //                 'success' => false,
+    //                 'message' => 'Gagal!<br> Upload Gambar Gagal: ' . implode('; ', $upload_errors)
+    //             );
+    //         } else {
+    //             // Data berhasil disimpan
+    //             $response = array(
+    //                 'success' => true,
+    //                 'message' => 'Sukses!<br>Data Berhasil Disimpan!',
+    //                 'redirect' => base_url('wisata') // URL untuk redirect setelah sukses
+    //             );
+    //         }
+    //     } else {
+    //         // Gagal menyimpan data wisata
+    //         $response = array(
+    //             'success' => false,
+    //             'message' => 'Gagal!<br>Data Wisata Gagal Disimpan!'
+    //         );
+    //     }
+
+    //     // Set header dan kirim response dalam format JSON
+    //     $this->output
+    //         ->set_content_type('application/json')
+    //         ->set_output(json_encode($response));
+    // }
+
     public function store()
     {
         // Ambil data dari form
@@ -76,44 +161,21 @@ class WisataController extends CI_Controller
         $wisata_id = $this->WisataModel->insert_wisata($data_wisata);
 
         if ($wisata_id) {
-            // Upload gambar
-            $files = $_FILES['gambar_detail'];
-            $file_count = count($files['name']);
-            $upload_errors = [];
+            // Upload gambar detail
+            $this->upload_multiple_images('gambar_detail', 'gambar_detail', $wisata_id);
 
-            for ($i = 0; $i < $file_count; $i++) {
-                $_FILES['file']['name'] = $files['name'][$i];
-                $_FILES['file']['type'] = $files['type'][$i];
-                $_FILES['file']['tmp_name'] = $files['tmp_name'][$i];
-                $_FILES['file']['error'] = $files['error'][$i];
-                $_FILES['file']['size'] = $files['size'][$i];
+            // Upload gambar fasilitas
+            $this->upload_multiple_images('gambar_fasilitas', 'gambar_fasilitas', $wisata_id);
 
-                if ($this->upload->do_upload('file')) {
-                    $upload_data = $this->upload->data();
-                    $image_data = array(
-                        'wisata_id' => $wisata_id,
-                        'gambar_detail' => $upload_data['file_name']
-                    );
-                    $this->WisataModel->insert_gambar($image_data);
-                } else {
-                    $upload_errors[] = $this->upload->display_errors();
-                }
-            }
+            // Upload gambar kondisi jalan
+            $this->upload_multiple_images('gambar_kondisi_jalan', 'gambar_kondisi_jalan', $wisata_id);
 
-            if (!empty($upload_errors)) {
-                // Gagal upload gambar
-                $response = array(
-                    'success' => false,
-                    'message' => 'Gagal!<br> Upload Gambar Gagal: ' . implode('; ', $upload_errors)
-                );
-            } else {
-                // Data berhasil disimpan
-                $response = array(
-                    'success' => true,
-                    'message' => 'Sukses!<br>Data Berhasil Disimpan!',
-                    'redirect' => base_url('wisata') // URL untuk redirect setelah sukses
-                );
-            }
+            // Jika upload berhasil
+            $response = array(
+                'success' => true,
+                'message' => 'Sukses!<br>Data Berhasil Disimpan!',
+                'redirect' => base_url('wisata') // URL untuk redirect setelah sukses
+            );
         } else {
             // Gagal menyimpan data wisata
             $response = array(
@@ -126,6 +188,46 @@ class WisataController extends CI_Controller
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($response));
+    }
+
+
+    private function upload_multiple_images($input_name, $table, $wisata_id)
+    {
+        // Ambil semua file dari input
+        $files = $_FILES[$input_name];
+        $file_count = count($files['name']);
+        $upload_errors = [];
+
+        for ($i = 0; $i < $file_count; $i++) {
+            $_FILES['file']['name'] = $files['name'][$i];
+            $_FILES['file']['type'] = $files['type'][$i];
+            $_FILES['file']['tmp_name'] = $files['tmp_name'][$i];
+            $_FILES['file']['error'] = $files['error'][$i];
+            $_FILES['file']['size'] = $files['size'][$i];
+
+            if ($this->upload->do_upload('file')) {
+                $upload_data = $this->upload->data();
+                $image_data = array(
+                    'wisata_id' => $wisata_id,
+                    $table => $upload_data['file_name'] // Menyimpan nama file di kolom yang sesuai
+                );
+                // Memilih tabel yang tepat untuk menyimpan gambar
+                if ($table === 'gambar_detail') {
+                    $this->WisataModel->insert_gambar($image_data);
+                } elseif ($table === 'gambar_fasilitas') {
+                    $this->WisataModel->insert_gambar_fasilitas($image_data);
+                } elseif ($table === 'gambar_kondisi_jalan') {
+                    $this->WisataModel->insert_gambar_kondisi_jalan($image_data);
+                }
+            } else {
+                $upload_errors[] = $this->upload->display_errors();
+            }
+        }
+
+        if (!empty($upload_errors)) {
+            return false; // Jika ada error saat upload
+        }
+        return true;
     }
 
     public function edit($hash)
@@ -149,7 +251,6 @@ class WisataController extends CI_Controller
         $this->load->view('admin/edit_wisata', $data);
         $this->load->view('layouts/footer', $data);
     }
-
 
     public function update()
     {
@@ -183,67 +284,21 @@ class WisataController extends CI_Controller
         $updated = $this->WisataModel->update_wisata($id, $data_wisata);
 
         if ($updated) {
-            // Konfigurasi untuk upload gambar baru
-            $files = $_FILES['gambar_detail'];
-            $file_count = count($files['name']);
-            $upload_errors = [];
-            $uploaded_files = [];
+            // Update gambar_detail
+            $this->update_images('gambar_detail', $id, 'tbl_gambar', 'gambar_detail');
 
-            // Jika ada gambar baru diunggah
-            if ($file_count > 0 && !empty(array_filter($files['name']))) {
-                // Hapus semua gambar lama sebelum mengupload gambar baru
-                $existing_images = $this->WisataModel->get_gambar_by_wisata_idku($id);
-                foreach ($existing_images as $image) {
-                    $image_name = $image['gambar_detail']; // Nama enkripsi dari database
-                    $image_path = './public/uploads/wisata/' . $image_name;
+            // Update gambar_fasilitas
+            $this->update_images('gambar_fasilitas', $id, 'tbl_fasilitas', 'gambar_fasilitas');
 
-                    if (file_exists($image_path)) {
-                        unlink($image_path);
-                    }
-                }
-                $this->WisataModel->delete_gambar_by_wisata_id($id);
+            // Update gambar_kondisi_jalan
+            $this->update_images('gambar_kondisi_jalan', $id, 'tbl_kondisi_jalan', 'gambar_kondisi_jalan');
 
-                // Proses upload gambar baru
-                for ($i = 0; $i < $file_count; $i++) {
-                    if ($files['error'][$i] == 4) {
-                        continue; // Skip jika tidak ada file yang dipilih
-                    }
-
-                    $_FILES['file']['name'] = $files['name'][$i];
-                    $_FILES['file']['type'] = $files['type'][$i];
-                    $_FILES['file']['tmp_name'] = $files['tmp_name'][$i];
-                    $_FILES['file']['error'] = $files['error'][$i];
-                    $_FILES['file']['size'] = $files['size'][$i];
-
-                    if ($this->upload->do_upload('file')) {
-                        $upload_data = $this->upload->data();
-                        $image_name = $upload_data['file_name'];
-                        $uploaded_files[] = $image_name;
-
-                        $image_data = array(
-                            'wisata_id' => $id,
-                            'gambar_detail' => $image_name
-                        );
-                        $this->WisataModel->insert_gambar($image_data);
-                    } else {
-                        $upload_errors[] = $this->upload->display_errors();
-                    }
-                }
-            }
-
-            // Kirim respons
-            if (!empty($upload_errors)) {
-                $response = array(
-                    'success' => false,
-                    'message' => 'Gagal!<br> Upload Gambar Gagal: ' . implode('; ', $upload_errors)
-                );
-            } else {
-                $response = array(
-                    'success' => true,
-                    'message' => 'Sukses!<br>Data Berhasil Diperbarui!',
-                    'redirect' => base_url('wisata')
-                );
-            }
+            // Kirim respons sukses
+            $response = array(
+                'success' => true,
+                'message' => 'Sukses!<br>Data Berhasil Diperbarui!',
+                'redirect' => base_url('wisata')
+            );
         } else {
             // Gagal menyimpan data wisata
             $response = array(
@@ -257,6 +312,167 @@ class WisataController extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($response));
     }
+
+    private function update_images($field_name, $wisata_id, $table_name, $column_name)
+    {
+        $files = $_FILES[$field_name];
+        $file_count = count($files['name']);
+        $upload_errors = [];
+
+        // Jika ada gambar baru diunggah
+        if ($file_count > 0 && !empty(array_filter($files['name']))) {
+            // Hapus semua gambar lama sebelum mengupload gambar baru
+            $existing_images = $this->WisataModel->get_gambar_by_wisata_id($wisata_id, $table_name, $column_name);
+            foreach ($existing_images as $image) {
+                $image_name = $image[$column_name]; // Nama enkripsi dari database
+                $image_path = './public/uploads/wisata/' . $image_name;
+
+                if (file_exists($image_path)) {
+                    unlink($image_path);
+                }
+            }
+
+            // Hapus gambar lama dari database
+            $this->WisataModel->delete_gambar_by_wisata_id($wisata_id, $table_name);
+
+            // Proses upload gambar baru
+            for ($i = 0; $i < $file_count; $i++) {
+                if ($files['error'][$i] == 4) {
+                    continue; // Skip jika tidak ada file yang dipilih
+                }
+
+                $_FILES['file']['name'] = $files['name'][$i];
+                $_FILES['file']['type'] = $files['type'][$i];
+                $_FILES['file']['tmp_name'] = $files['tmp_name'][$i];
+                $_FILES['file']['error'] = $files['error'][$i];
+                $_FILES['file']['size'] = $files['size'][$i];
+
+                if ($this->upload->do_upload('file')) {
+                    $upload_data = $this->upload->data();
+                    $image_name = $upload_data['file_name'];
+
+                    // Simpan gambar baru ke database
+                    $image_data = array(
+                        'wisata_id' => $wisata_id,
+                        $column_name => $image_name
+                    );
+                    $this->WisataModel->insert_gambar($table_name, $image_data);
+                } else {
+                    $upload_errors[] = $this->upload->display_errors();
+                }
+            }
+        }
+
+        return $upload_errors;
+    }
+
+
+    // public function update()
+    // {
+    //     // Ambil data dari form
+    //     $id = $this->input->post('id');
+    //     $nama_wisata = $this->input->post('nama_wisata');
+    //     $alamat_lengkap = $this->input->post('alamat_lengkap');
+    //     $latitude = $this->input->post('latitude');
+    //     $longitude = $this->input->post('longitude');
+    //     $kategori_id = $this->input->post('kategori_id');
+    //     $deskripsi = $this->input->post('deskripsi');
+
+    //     // Konfigurasi upload gambar
+    //     $config['upload_path'] = './public/uploads/wisata/';
+    //     $config['allowed_types'] = 'gif|jpg|png|jpeg';
+    //     $config['max_size'] = 5048;
+    //     $config['encrypt_name'] = TRUE;
+
+    //     $this->load->library('upload', $config);
+
+    //     // Update data wisata
+    //     $data_wisata = array(
+    //         'nama_wisata' => $nama_wisata,
+    //         'alamat_lengkap' => $alamat_lengkap,
+    //         'latitude' => $latitude,
+    //         'longitude' => $longitude,
+    //         'kategori_id' => $kategori_id,
+    //         'deskripsi' => $deskripsi
+    //     );
+
+    //     $updated = $this->WisataModel->update_wisata($id, $data_wisata);
+
+    //     if ($updated) {
+    //         // Konfigurasi untuk upload gambar baru
+    //         $files = $_FILES['gambar_detail'];
+    //         $file_count = count($files['name']);
+    //         $upload_errors = [];
+    //         $uploaded_files = [];
+
+    //         // Jika ada gambar baru diunggah
+    //         if ($file_count > 0 && !empty(array_filter($files['name']))) {
+    //             // Hapus semua gambar lama sebelum mengupload gambar baru
+    //             $existing_images = $this->WisataModel->get_gambar_by_wisata_idku($id);
+    //             foreach ($existing_images as $image) {
+    //                 $image_name = $image['gambar_detail']; // Nama enkripsi dari database
+    //                 $image_path = './public/uploads/wisata/' . $image_name;
+
+    //                 if (file_exists($image_path)) {
+    //                     unlink($image_path);
+    //                 }
+    //             }
+    //             $this->WisataModel->delete_gambar_by_wisata_id($id);
+
+    //             // Proses upload gambar baru
+    //             for ($i = 0; $i < $file_count; $i++) {
+    //                 if ($files['error'][$i] == 4) {
+    //                     continue; // Skip jika tidak ada file yang dipilih
+    //                 }
+
+    //                 $_FILES['file']['name'] = $files['name'][$i];
+    //                 $_FILES['file']['type'] = $files['type'][$i];
+    //                 $_FILES['file']['tmp_name'] = $files['tmp_name'][$i];
+    //                 $_FILES['file']['error'] = $files['error'][$i];
+    //                 $_FILES['file']['size'] = $files['size'][$i];
+
+    //                 if ($this->upload->do_upload('file')) {
+    //                     $upload_data = $this->upload->data();
+    //                     $image_name = $upload_data['file_name'];
+    //                     $uploaded_files[] = $image_name;
+
+    //                     $image_data = array(
+    //                         'wisata_id' => $id,
+    //                         'gambar_detail' => $image_name
+    //                     );
+    //                     $this->WisataModel->insert_gambar($image_data);
+    //                 } else {
+    //                     $upload_errors[] = $this->upload->display_errors();
+    //                 }
+    //             }
+    //         }
+
+    //         // Kirim respons
+    //         if (!empty($upload_errors)) {
+    //             $response = array(
+    //                 'success' => false,
+    //                 'message' => 'Gagal!<br> Upload Gambar Gagal: ' . implode('; ', $upload_errors)
+    //             );
+    //         } else {
+    //             $response = array(
+    //                 'success' => true,
+    //                 'message' => 'Sukses!<br>Data Berhasil Diperbarui!',
+    //                 'redirect' => base_url('wisata')
+    //             );
+    //         }
+    //     } else {
+    //         // Gagal menyimpan data wisata
+    //         $response = array(
+    //             'success' => false,
+    //             'message' => 'Gagal!<br>Data Wisata Gagal Diperbarui!'
+    //         );
+    //     }
+
+    //     // Kirim response dalam format JSON
+    //     $this->output
+    //         ->set_content_type('application/json')
+    //         ->set_output(json_encode($response));
+    // }
 }
 
 /* End of file WisataController.php */

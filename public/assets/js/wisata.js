@@ -1,10 +1,12 @@
 $(document).ready(function () {
-	var selectedFiles = [];
+	var selectedFilesDetail = [];
+	var selectedFilesFasilitas = [];
+	var selectedFilesJalan = [];
 
-	function updatePreview() {
-		$('#previewContainer').empty(); // Clear existing previews
+	function updatePreview(inputType, previewContainerId, selectedFilesArray) {
+		$(previewContainerId).empty(); // Clear existing previews
 
-		selectedFiles.forEach(function (file, index) {
+		selectedFilesArray.forEach(function (file, index) {
 			var reader = new FileReader();
 
 			reader.onload = function (e) {
@@ -13,18 +15,18 @@ $(document).ready(function () {
 				var removeBtn = $('<button class="remove-btn">X</button>');
 
 				removeBtn.on('click', function () {
-					selectedFiles.splice(index, 1); // Remove file from array
-					updatePreview(); // Update preview
+					selectedFilesArray.splice(index, 1); // Remove file from array
+					updatePreview(inputType, previewContainerId, selectedFilesArray); // Update preview
 					// Re-add remaining files to input
 					var dataTransfer = new DataTransfer();
-					selectedFiles.forEach(function (file) {
+					selectedFilesArray.forEach(function (file) {
 						dataTransfer.items.add(file);
 					});
-					document.getElementById('gambar_detail').files = dataTransfer.files;
+					document.getElementById(inputType).files = dataTransfer.files;
 				});
 
 				previewItem.append(img).append(removeBtn);
-				$('#previewContainer').append(previewItem);
+				$(previewContainerId).append(previewItem);
 			}
 
 			reader.readAsDataURL(file);
@@ -34,10 +36,27 @@ $(document).ready(function () {
 	$('#gambar_detail').on('change', function (event) {
 		var files = event.target.files;
 		if (files) {
-			selectedFiles = Array.from(files); // Convert FileList to Array
-			updatePreview(); // Update preview with new files
+			selectedFilesDetail = Array.from(files); // Convert FileList to Array
+			updatePreview('gambar_detail', '#previewContainerDetail', selectedFilesDetail); // Update preview with new files
 		}
 	});
+
+	$('#gambar_fasilitas').on('change', function (event) {
+		var files = event.target.files;
+		if (files) {
+			selectedFilesFasilitas = Array.from(files); // Convert FileList to Array
+			updatePreview('gambar_fasilitas', '#previewContainerFasilitas', selectedFilesFasilitas); // Update preview with new files
+		}
+	});
+
+	$('#gambar_kondisi_jalan').on('change', function (event) {
+		var files = event.target.files;
+		if (files) {
+			selectedFilesJalan = Array.from(files); // Convert FileList to Array
+			updatePreview('gambar_kondisi_jalan', '#previewContainerJalan', selectedFilesJalan); // Update preview with new files
+		}
+	});
+
 
 	$('#wisataForm').on('submit', function (event) {
 		event.preventDefault();
@@ -53,9 +72,19 @@ $(document).ready(function () {
 		formData.append('kategori_id', $('#kategori_id').val());
 		formData.append('deskripsi', $('#deskripsi').val());
 
-		// Append the selected files to FormData
-		selectedFiles.forEach(function (file) {
+		// Append the selected files for gambar_detail
+		selectedFilesDetail.forEach(function (file) {
 			formData.append('gambar_detail[]', file);
+		});
+
+		// Append the selected files for gambar_fasilitas
+		selectedFilesFasilitas.forEach(function (file) {
+			formData.append('gambar_fasilitas[]', file);
+		});
+
+		// Append the selected files for gambar_kondisi_jalan
+		selectedFilesJalan.forEach(function (file) {
+			formData.append('gambar_kondisi_jalan[]', file);
 		});
 
 		$('#btnLoader').show();
@@ -84,8 +113,12 @@ $(document).ready(function () {
 
 				// Mengosongkan nilai form setelah berhasil
 				$('#wisataForm')[0].reset(); // Reset form fields
-				selectedFiles = []; // Clear the file array
-				$('#previewContainer').empty(); // Clear preview container
+				selectedFilesDetail = []; // Clear the file array for gambar_detail
+				selectedFilesFasilitas = []; // Clear the file array for gambar_fasilitas
+				selectedFilesJalan = []; // Clear the file array for gambar_kondisi_jalan
+				$('#previewContainerDetail').empty(); // Clear preview container for gambar_detail
+				$('#previewContainerFasilitas').empty(); // Clear preview container for gambar_fasilitas
+				$('#previewContainerJalan').empty(); // Clear preview container for gambar_kondisi_jalan
 
 				// Redirect ke halaman wisata setelah 2 detik
 				if (response.redirect) {

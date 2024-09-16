@@ -81,10 +81,10 @@
 
 
                  <li class="nav-item">
-                     <a href="<?= base_url('pengaduan') ?>" class="nav-link <?= $this->uri->segment(1) == 'pengaduan' ? 'active' : '' ?>">
+                     <a href="<?= base_url('reviews') ?>" class="nav-link <?= $this->uri->segment(1) == 'reviews' ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-comments"></i>
                          <p>
-                             Pengaduan
+                             Reviews
                          </p>
                      </a>
                  </li>

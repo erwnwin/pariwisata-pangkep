@@ -5,7 +5,7 @@
                  <div class="container-fluid">
                      <div class="row mb-2">
                          <div class="col-sm-6">
-                             <h1>Riwayat Pengaduan</h1>
+                             <h1>Riwayat Reviews</h1>
                          </div>
                      </div>
                  </div><!-- /.container-fluid -->
@@ -17,7 +17,7 @@
 
                      <div class="card card-default">
                          <div class="card-header">
-                             <h3 class="card-title">Daftar Riwayat Pengaduan</h3>
+                             <h3 class="card-title">Daftar Riwayat Reviews</h3>
 
                              <!-- <div class="card-tools">
                                  <a href="<?= base_url('jasa-titip/create') ?>" class="btn btn-sm btn-primary">
@@ -27,7 +27,7 @@
                          </div>
                          <!-- /.card-header -->
                          <div class="card-body">
-                             <form method="get" action="<?= base_url('pengaduan') ?>">
+                             <form method="get" action="<?= base_url('reviews') ?>">
                                  <div class="row">
                                      <div class="col-md-3">
                                          <div class="form-group">
@@ -98,7 +98,7 @@
                                          <tr>
                                              <th style="width: 10px">#</th>
                                              <th>Nama Wisata</th>
-                                             <th>Isi Pengaduan</th>
+                                             <th>Reviews/Saran</th>
                                              <th style="width: 200px">Date Sent</th>
                                          </tr>
                                      </thead>

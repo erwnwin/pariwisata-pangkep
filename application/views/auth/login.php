@@ -8,8 +8,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url() ?>public/assets/dist/img/logo-jastip.png">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="<?= base_url() ?>public/assets/css/all.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>public/assets/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap">
     <link rel="stylesheet" href="<?= base_url() ?>public/assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>public/assets/plugins/toastr/toastr.min.css">
@@ -103,9 +103,7 @@
 <script src="<?= base_url() ?>public/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- Toastr -->
 <script src="<?= base_url() ?>public/assets/plugins/toastr/toastr.min.js"></script>
-
 <script src="<?= base_url() ?>public/css/login.js"></script>
 <script src="<?= base_url() ?>public/assets/js/login.js"></script>
-
 
 </html>

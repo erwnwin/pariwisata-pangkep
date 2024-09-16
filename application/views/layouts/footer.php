@@ -2,7 +2,7 @@
     <div class="float-right d-none d-sm-block">
         Anything you want
     </div>
-    <strong>Copyright &copy; 2014-2021 <a href="">Titik Balik Teknologi</a>.</strong>
+    <strong>Copyright &copy; 2022 - <?= date('Y') ?> <a href="">Titik Balik Teknologi</a>.</strong>
 </footer>
 
 <aside class="control-sidebar control-sidebar-dark">

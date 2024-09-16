@@ -95,13 +95,17 @@ $route['wisata/(:any)/edit'] = 'admin/WisataController/edit/$1';
 // API wisata
 $route['api/wisata'] = 'api/ApiWisataController/index';
 $route['api/wisata/kategori/(:num)'] = 'api/ApiWisataController/wisata_by_kategori/$1';
+$route['api/wisata/nearby'] = 'api/ApiWisataController/get_nearby_wisata';
 
 $route['api/visitor/record'] = 'api/ApiVisitorController/record';
 
 
-$route['pengaduan'] = 'admin/PengaduanController';
+$route['reviews'] = 'admin/PengaduanController';
 $route['api/pengaduan/kirim'] = 'api/ApiPengaduanController/submit_complaint';
 
+// likes
+$route['api/suka/get-like-status'] = 'api/ApiSuka/get_like_status';
+$route['api/suka/toggle-like'] = 'api/ApiSuka/toggle_like';
 
 // INFO APPS
 $route['info-apps'] = 'admin/InfoAppController';

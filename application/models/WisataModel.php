@@ -70,6 +70,16 @@ class WisataModel extends CI_Model
         $this->db->insert('tbl_gambar', $data);
     }
 
+    public function insert_gambar_fasilitas($data)
+    {
+        $this->db->insert('tbl_fasilitas', $data);
+    }
+
+    public function insert_gambar_kondisi_jalan($data)
+    {
+        $this->db->insert('tbl_kondisi_jalan', $data);
+    }
+
     public function get_all_wisata()
     {
         $this->db->select('tbl_wisata.*, tbl_kategori.nama_kategori');
@@ -89,16 +99,43 @@ class WisataModel extends CI_Model
         return array_column($query->result_array(), 'gambar_detail');
     }
 
+
+
+    public function get_gambar_fasilitas_by_wisata_id($wisata_id)
+    {
+        $this->db->select('gambar_fasilitas');
+        $this->db->from('tbl_fasilitas');
+        $this->db->where('wisata_id', $wisata_id);
+        $query = $this->db->get();
+
+        return array_column($query->result_array(), 'gambar_fasilitas');
+    }
+
+
+    public function get_gambar_kondisi_jalan_by_wisata_id($wisata_id)
+    {
+        $this->db->select('gambar_kondisi_jalan');
+        $this->db->from('tbl_kondisi_jalan');
+        $this->db->where('wisata_id', $wisata_id);
+        $query = $this->db->get();
+
+        return array_column($query->result_array(), 'gambar_kondisi_jalan');
+    }
+
+
+
     public function get_wisata_by_kategori($kategori_id)
     {
         $kategori_id = (int)$kategori_id; // Pastikan kategori_id adalah integer
 
         // Pilih kolom yang dibutuhkan dari tbl_wisata, tbl_gambar, dan tbl_kategori
-        $this->db->select('tbl_wisata.id, tbl_wisata.nama_wisata, tbl_wisata.alamat_lengkap, tbl_wisata.latitude, tbl_wisata.longitude, tbl_wisata.deskripsi, tbl_wisata.kategori_id, tbl_kategori.nama_kategori, GROUP_CONCAT(tbl_gambar.gambar_detail) AS gambar_list');
+        $this->db->select('tbl_wisata.id, tbl_wisata.nama_wisata, tbl_wisata.alamat_lengkap, tbl_wisata.latitude, tbl_wisata.longitude, tbl_wisata.deskripsi, tbl_wisata.kategori_id, tbl_kategori.nama_kategori, GROUP_CONCAT(DISTINCT tbl_gambar.gambar_detail) AS gambar_list, GROUP_CONCAT(DISTINCT tbl_fasilitas.gambar_fasilitas) AS gambar_fasilitas, GROUP_CONCAT(DISTINCT tbl_kondisi_jalan.gambar_kondisi_jalan) AS gambar_kondisi_jalan');
         $this->db->from('tbl_wisata');
 
         // Join dengan tabel tbl_gambar berdasarkan wisata_id
         $this->db->join('tbl_gambar', 'tbl_gambar.wisata_id = tbl_wisata.id', 'left');
+        $this->db->join('tbl_fasilitas', 'tbl_fasilitas.wisata_id = tbl_wisata.id', 'left');
+        $this->db->join('tbl_kondisi_jalan', 'tbl_kondisi_jalan.wisata_id = tbl_wisata.id', 'left');
 
         // Join dengan tabel tbl_kategori untuk mendapatkan nama kategori
         $this->db->join('tbl_kategori', 'tbl_wisata.kategori_id = tbl_kategori.id', 'left');
@@ -118,6 +155,8 @@ class WisataModel extends CI_Model
         foreach ($result as &$row) {
             // Mengubah gambar_list dari string yang dipisahkan koma menjadi array
             $row['gambar_list'] = explode(',', $row['gambar_list']);
+            $row['gambar_fasilitas'] = explode(',', $row['gambar_fasilitas']);
+            $row['gambar_kondisi_jalan'] = explode(',', $row['gambar_kondisi_jalan']);
         }
 
         return $result;
@@ -154,6 +193,23 @@ class WisataModel extends CI_Model
     {
         $this->db->where('id', $id);
         return $this->db->update('tbl_wisata', $data);
+    }
+
+
+    public function get_nearby_wisata($latitude, $longitude, $radius = 10)
+    {
+        // Radius dalam satuan derajat (misalnya 10 km)
+        $radius_in_degrees = $radius / 111; // 1 derajat ~ 111 km
+
+        $this->db->select('id, nama_wisata, alamat_lengkap, latitude, longitude, deskripsi, kategori_id');
+        $this->db->from('tbl_wisata');
+        $this->db->where('latitude >=', $latitude - $radius_in_degrees);
+        $this->db->where('latitude <=', $latitude + $radius_in_degrees);
+        $this->db->where('longitude >=', $longitude - $radius_in_degrees);
+        $this->db->where('longitude <=', $longitude + $radius_in_degrees);
+
+        $query = $this->db->get();
+        return $query->result_array();
     }
 }
 

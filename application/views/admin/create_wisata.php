@@ -16,12 +16,12 @@
                  <div class="container-fluid">
 
                      <div class="row">
-                         <div class="col-lg-2">
+                         <div class="col-lg-1">
 
                          </div>
                          <!-- ./col -->
 
-                         <div class="col-lg-8 col-12">
+                         <div class="col-lg-10 col-12">
                              <!-- Default box -->
                              <div class="card">
                                  <div class="card-header">
@@ -83,11 +83,29 @@
                                              </div>
 
                                              <div class="form-group row">
+                                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Pilih Beberapa Gambar Fasilitas</label>
+                                                 <div class="col-sm-9">
+                                                     <input type="file" name="gambar_fasilitas[]" class="form-control" id="gambar_fasilitas" multiple accept="image/*" required>
+                                                     <span class="text-small text-danger" style="font-size: 12px;">*Dapat upload beberapa file. Maks size 5 MB</span>
+                                                     <div class="preview-container" id="previewContainerFasilitas"></div>
+                                                 </div>
+                                             </div>
+
+                                             <div class="form-group row">
+                                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Pilih Beberapa Gambar Kondisi Jalan</label>
+                                                 <div class="col-sm-9">
+                                                     <input type="file" name="gambar_kondisi_jalan[]" class="form-control" id="gambar_kondisi_jalan" multiple accept="image/*" required>
+                                                     <span class="text-small text-danger" style="font-size: 12px;">*Dapat upload beberapa file. Maks size 5 MB</span>
+                                                     <div class="preview-container" id="previewContainerJalan"></div>
+                                                 </div>
+                                             </div>
+
+                                             <div class="form-group row">
                                                  <label for="inputEmail3" class="col-sm-3 col-form-label">Pilih Beberapa Gambar</label>
                                                  <div class="col-sm-9">
                                                      <input type="file" name="gambar_detail[]" class="form-control" id="gambar_detail" multiple accept="image/*" required>
                                                      <span class="text-small text-danger" style="font-size: 12px;">*Dapat upload beberapa file. Maks size 5 MB</span>
-                                                     <div class="preview-container" id="previewContainer"></div>
+                                                     <div class="preview-container" id="previewContainerDetail"></div>
                                                  </div>
                                              </div>
 
@@ -112,7 +130,7 @@
                          </div>
                          <!-- ./col -->
 
-                         <div class="col-lg-2">
+                         <div class="col-lg-1">
 
                          </div>
                          <!-- ./col -->
