@@ -139,10 +139,10 @@
 <body>
     <div class="container">
         <div class="error-content">
-            <div class="error-code">Belum Berfungsi ini Halaman Boskuuuu...</div>
+            <div class="error-code">Lagi Perbaikan Boskuuuu...</div>
             <div class="error-message">Oops! Page Not Found</div>
             <div class="error-description">It looks like the page you’re looking for doesn’t exist.</div>
-            <a href="<?= base_url('dashboard') ?>" class="home-link">Go to Dashboard</a>
+            <!-- <a href="<?= base_url('dashboard') ?>" class="home-link">Go to Dashboard</a> -->
         </div>
         <div id="ribbon" class="ribbon"></div>
     </div>
