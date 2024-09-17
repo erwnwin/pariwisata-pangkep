@@ -46,11 +46,11 @@ class WisataModel extends CI_Model
         $this->db->delete('tbl_gambar');
     }
 
-    public function delete_gambar_by_wisata_id($id)
-    {
-        $this->db->where('wisata_id', $id);
-        $this->db->delete('tbl_gambar');
-    }
+    // public function delete_gambar_by_wisata_id($id)
+    // {
+    //     $this->db->where('wisata_id', $id);
+    //     $this->db->delete('tbl_gambar');
+    // }
 
     public function update_wisata($id, $data)
     {
@@ -65,10 +65,10 @@ class WisataModel extends CI_Model
         return $this->db->insert_id();
     }
 
-    public function insert_gambar($data)
-    {
-        $this->db->insert('tbl_gambar', $data);
-    }
+    // public function insert_gambar($data)
+    // {
+    //     $this->db->insert('tbl_gambar', $data);
+    // }
 
     public function insert_gambar_fasilitas($data)
     {
@@ -89,15 +89,15 @@ class WisataModel extends CI_Model
         return $query->result_array();
     }
 
-    public function get_gambar_by_wisata_id($wisata_id)
-    {
-        $this->db->select('gambar_detail');
-        $this->db->from('tbl_gambar');
-        $this->db->where('wisata_id', $wisata_id);
-        $query = $this->db->get();
+    // public function get_gambar_by_wisata_id($wisata_id)
+    // {
+    //     $this->db->select('gambar_detail');
+    //     $this->db->from('tbl_gambar');
+    //     $this->db->where('wisata_id', $wisata_id);
+    //     $query = $this->db->get();
 
-        return array_column($query->result_array(), 'gambar_detail');
-    }
+    //     return array_column($query->result_array(), 'gambar_detail');
+    // }
 
 
 
@@ -208,6 +208,33 @@ class WisataModel extends CI_Model
         $this->db->where('longitude >=', $longitude - $radius_in_degrees);
         $this->db->where('longitude <=', $longitude + $radius_in_degrees);
 
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+
+    // Fungsi untuk menghapus gambar berdasarkan wisata_id
+    public function delete_gambar_by_wisata_id($wisata_id, $table_name)
+    {
+        // Menentukan tabel yang digunakan
+        $this->db->where('wisata_id', $wisata_id);
+        $this->db->delete($table_name);
+    }
+
+    // Fungsi untuk menyimpan gambar baru ke database
+    public function insert_gambar($table_name, $image_data)
+    {
+        // Menyimpan data gambar baru ke tabel yang ditentukan
+        $this->db->insert($table_name, $image_data);
+    }
+
+    // Fungsi untuk mendapatkan gambar berdasarkan wisata_id
+    public function get_gambar_by_wisata_id($wisata_id, $table_name, $column_name)
+    {
+        // Mendapatkan semua gambar yang berkaitan dengan wisata_id
+        $this->db->select($column_name);
+        $this->db->from($table_name);
+        $this->db->where('wisata_id', $wisata_id);
         $query = $this->db->get();
         return $query->result_array();
     }

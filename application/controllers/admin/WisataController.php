@@ -356,7 +356,7 @@ class WisataController extends CI_Controller
                         'wisata_id' => $wisata_id,
                         $column_name => $image_name
                     );
-                    $this->WisataModel->insert_gambar($image_data);
+                    $this->WisataModel->insert_gambar($table_name, $image_data);
                 } else {
                     $upload_errors[] = $this->upload->display_errors();
                 }
