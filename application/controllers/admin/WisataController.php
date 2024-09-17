@@ -213,7 +213,7 @@ class WisataController extends CI_Controller
                 );
                 // Memilih tabel yang tepat untuk menyimpan gambar
                 if ($table === 'gambar_detail') {
-                    $this->WisataModel->insert_gambar($image_data);
+                    $this->WisataModel->insert_gambar_wisata($image_data);
                 } elseif ($table === 'gambar_fasilitas') {
                     $this->WisataModel->insert_gambar_fasilitas($image_data);
                 } elseif ($table === 'gambar_kondisi_jalan') {

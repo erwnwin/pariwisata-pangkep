@@ -65,10 +65,10 @@ class WisataModel extends CI_Model
         return $this->db->insert_id();
     }
 
-    // public function insert_gambar($data)
-    // {
-    //     $this->db->insert('tbl_gambar', $data);
-    // }
+    public function insert_gambar_wisata($data)
+    {
+        $this->db->insert('tbl_gambar', $data);
+    }
 
     public function insert_gambar_fasilitas($data)
     {
