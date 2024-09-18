@@ -16,7 +16,7 @@ class ApiWisataController extends CI_Controller
         $wisata_data = $this->WisataModel->get_all_wisata();
 
         foreach ($wisata_data as &$wisata) {
-            $wisata['gambar_list'] = $this->WisataModel->get_gambar_by_wisata_id($wisata['id']);
+            $wisata['gambar_list'] = $this->WisataModel->get_gambar_by_wisata_detail($wisata['id']);
 
             // Ambil gambar fasilitas
             $wisata['gambar_fasilitas'] = $this->WisataModel->get_gambar_fasilitas_by_wisata_id($wisata['id']);

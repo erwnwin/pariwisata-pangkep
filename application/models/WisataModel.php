@@ -89,15 +89,15 @@ class WisataModel extends CI_Model
         return $query->result_array();
     }
 
-    // public function get_gambar_by_wisata_id($wisata_id)
-    // {
-    //     $this->db->select('gambar_detail');
-    //     $this->db->from('tbl_gambar');
-    //     $this->db->where('wisata_id', $wisata_id);
-    //     $query = $this->db->get();
+    public function get_gambar_by_wisata_detail($wisata_id)
+    {
+        $this->db->select('gambar_detail');
+        $this->db->from('tbl_gambar');
+        $this->db->where('wisata_id', $wisata_id);
+        $query = $this->db->get();
 
-    //     return array_column($query->result_array(), 'gambar_detail');
-    // }
+        return array_column($query->result_array(), 'gambar_detail');
+    }
 
 
 
